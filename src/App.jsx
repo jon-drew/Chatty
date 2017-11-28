@@ -8,11 +8,13 @@ class App extends Component {
     this.state = {
       currentUser: {name: "Bob"},
       messages: [
-        {username: "Bob",
-         content: "Has anyone seen my marbles?",
+        {id: 1,
+          username: "Bob",
+          content: "Has anyone seen my marbles?",
         },
-        {username: "Anonymous",
-         content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
+        {id: 2,
+          username: "Anonymous",
+          content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
         }
       ]
     }
@@ -24,7 +26,7 @@ class App extends Component {
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
-        <MessageList name={this.state.messages}/>
+        <MessageList messages={this.state.messages}/>
         <ChatBar name={this.state.currentUser.name}/>
       </div>
     );
