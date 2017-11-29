@@ -6,19 +6,11 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: {name: "Anonymous"},
-      messages: [
-        {id: 1,
-          username: "Bob",
-          content: "Has anyone seen my marbles?",
-        },
-        {id: 2,
-          username: "Anonymous",
-          content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-        }
-      ]
+      currentUser: {name: "Bob"},
+      messages: []
     }
-    this.createNewMessage = this.createNewMessage.bind(this)
+    this.createNewMessage = this.createNewMessage.bind(this);
+    this.connection = new WebSocket('ws://localhost:3001/');
   }
 
   createNewMessage(allMessages) {
@@ -26,10 +18,22 @@ class App extends Component {
       currentUser: allMessages.currentUser,
       messages: this.state.messages.concat(allMessages.messages)
     })
+      let message = {
+        type: "message",
+        name: this.state.currentUser.name,
+        content: this.state.messages,
+      };
+        this.connection.send(JSON.stringify(message))
   }
 
   componentDidMount() {
     console.log("componentDidMount <App />");
+    function connect() {
+      this.connection.onopen = evt => {
+        this.connection.send('Connected to server')
+      }
+    }
+
     setTimeout(() => {
       console.log("Simulating incoming message");
       // Add a new message to the list of messages in the data store

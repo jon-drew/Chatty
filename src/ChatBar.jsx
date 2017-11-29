@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+const uuid = require('uuid/v4');
 
 class Chatbar extends Component {
   constructor( props ) {
@@ -14,15 +15,14 @@ class Chatbar extends Component {
     if (event.keyCode === 13) {
       let newMessage = {
         message: event.target.value,
-        username: 'user'
+        username: "Jon"
       }
 
       this.setState(newMessage, () => {
-        let keyID = 4;
         this.props.createNewMessage({
           currentUser: this.state.username,
           messages: [{
-            key: keyID,
+            key: uuid(),
             username: this.state.username,
             content: this.state.message
           }]
