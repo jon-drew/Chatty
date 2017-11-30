@@ -9,21 +9,8 @@ class App extends Component {
       currentUser: {name: "Bob"},
       messages: []
     }
-    this.createNewMessage = this.createNewMessage.bind(this);
     this.connection = new WebSocket('ws://localhost:3001/');
-  }
-
-  createNewMessage(allMessages) {
-    this.setState({
-      currentUser: allMessages.currentUser,
-      messages: this.state.messages.concat(allMessages.messages)
-    })
-      let message = {
-        type: "message",
-        name: this.state.currentUser.name,
-        content: this.state.messages,
-      };
-        this.connection.send(JSON.stringify(message))
+    this.createNewMessage = this.createNewMessage.bind(this);
   }
 
   componentDidMount() {
@@ -33,17 +20,28 @@ class App extends Component {
         this.connection.send('Connected to server')
       }
     }
-
-    setTimeout(() => {
-      console.log("Simulating incoming message");
-      // Add a new message to the list of messages in the data store
-      const newMessage = {id: 3, username: "Michelle", content: "Hello there!"};
-      const messages = this.state.messages.concat(newMessage)
-      // Update the state of the app component.
-      // Calling setState will trigger a call to render() in App and all child components.
-      this.setState({messages: messages})
-    }, 3000);
   }
+
+  createNewMessage(newMessage) {
+    newMessage.username = this.state.currentUser.name;
+    this.connection.send(JSON.stringify(newMessage));
+  }
+
+  addNewMessage(messageFromServer) {
+    let newMessage = JSON.parse(messageFromServer.data);
+    this.state.messages.push(newMessage);
+    this.setState({data: this.state});
+  }
+
+  //   setTimeout(() => {
+  //     console.log("Simulating incoming message");
+  //     // Add a new message to the list of messages in the data store
+  //     const newMessage = {id: 3, username: "Michelle", content: "Hello there!"};
+  //     const messages = this.state.messages.concat(newMessage)
+  //     // Update the state of the app component.
+  //     // Calling setState will trigger a call to render() in App and all child components.
+  //     this.setState({messages: messages})
+  //   }, 3000);
 
   render() {
     return (
