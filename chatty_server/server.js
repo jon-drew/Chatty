@@ -26,24 +26,24 @@ wss.on('connection', (ws) => {
 
   let username = "Anonymous";
 
-  ws.on('message', function incoming(message){
-    message = JSON.parse(message);
-    message.id = uuid();
+  ws.on('message', function incoming(message) {
+    parsedMessage = JSON.parse(message);
+    parsedMessage.id = uuid();
 
-    if (message.username === undefined) {
-      message.username = username;
+    if (parsedMessage.username === undefined) {
+      parsedMessage.username = username;
     }
 
-    if (message.content === undefined) {
-      if (username === message.username){
-        return;
-      };
-
-      message.content = `${username} changed their name to ${message.username}.`
-      username = message.username;
-      message.username = "";
+    if (parsedMessage.content === undefined) {
+      if (parsedMessage.username === username) {
+        return
+      }
+      parsedMessage.content = `${username} changed their name to ${parsedMessage.username}.`
+      username = parsedMessage.username;
+      parsedMessage.username = "";
     }
-    wss.broadcast(JSON.stringify(message));
+
+    wss.broadcast(JSON.stringify(parsedMessage));
   })
 
   ws.on('close', () => {

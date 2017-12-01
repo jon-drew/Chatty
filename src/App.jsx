@@ -23,24 +23,22 @@ class App extends Component {
     }
 
     this.socket.onmessage = messageEvent => {
-      let newMessage = JSON.parse(messageEvent.data);
-      if (newMessage.content !== undefined){
-        this.setState(
-          {messages: this.state.messages.concat(newMessage)}
-        );
+      let incomingMessage = JSON.parse(messageEvent.data);
+      if (incomingMessage.content !== undefined){
+        this.setState({messages: this.state.messages.concat(incomingMessage)})
       } else {
-        if (newMessage.counter)
-          this.setState({numberOfUsers: newMessage.counter});
+        if (incomingMessage.counter)
+          this.setState({numberOfUsers: incomingMessage.counter});
       }
     }
   }
 
-  onName = (newUser) =>{
+  changeName = (newUser) => {
     if(this.socket)
       this.socket.send(JSON.stringify({username: newUser}));
   }
 
-  onMessage = (content) =>{
+  newMessage = (content) => {
     if(this.socket)
       this.socket.send(JSON.stringify({content}));
   }
@@ -55,8 +53,8 @@ class App extends Component {
           MessageList={this.state.messages}
         />
         <ChatBar
-          onName={this.onName}
-          onMessage={this.onMessage}
+          changeName={this.changeName}
+          newMessage={this.newMessage}
         />
       </div>
     );
