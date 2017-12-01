@@ -15,12 +15,9 @@ class Chatbar extends Component {
       }
       this.setState(newMessage, () => {
         console.log(newMessage);
-        this.props.createNewMessage({
-          currentUser: this.state.username,
-          message: {
-            username: this.state.username,
+        this.props.handleSubmit({
+            username: this.state.name,
             content: this.state.message
-          }
         })
       })
     }
@@ -28,8 +25,8 @@ class Chatbar extends Component {
 
   render() {
     return (
-      <footer className="chatbar">
-        <input className="chatbar-username" placeholder="Your Name (Optional)" value={this.props.currentUser} onChange={this.enterListener}/>
+      <footer className="chatbar" onSubmit={this.handleSubmit}>
+        <input className="chatbar-username" placeholder="Your Name (Optional)" value={this.props.name} onChange={this.handleChange}/>
         <input className="chatbar-message" placeholder="Type a message and hit ENTER" onKeyDown={this.enterListener}/>
       </footer>
     );

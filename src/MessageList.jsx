@@ -9,7 +9,7 @@ class MessageList extends Component {
     return(
       <div id="message-list">
         {messages.map(function(message) {
-          return <Message key={message.id} username={message.username} content={message.content} />
+          return <Message key={message.id} username={message.name} content={message.content} />
         })}
       </div>
     )
