@@ -1,35 +1,54 @@
 import React, {Component} from 'react';
 
-class Chatbar extends Component {
-  constructor( props ) {
+class ChatBar extends Component {
+  constructor(props){
     super(props);
-    this.state = {value: this.props.message}
-    this.enterListener = this.enterListener.bind(this)
+    this.state = {
+     user: "",
+     message: ""
+    };
   }
 
-  enterListener(event) {
+  submitName = (event) => {
     if (event.keyCode === 13) {
-      let newMessage = {
-        username: this.props.name,
-        message: event.target.value
-      }
-      this.setState(newMessage, () => {
-        console.log(newMessage);
-        this.props.handleSubmit({
-            username: this.state.name,
-            content: this.state.message
-        })
-      })
+      this.props.onName(this.state.user);
     }
+  }
+
+  updateName = (event) => {
+    this.setState({user: event.target.value});
+  }
+
+  submitMessage = (event) => {
+    if (event.keyCode === 13) {
+      this.props.onMessage(this.state.message);
+      this.setState({message: ""});
+    }
+  }
+
+  updateMessage = (event) => {
+    this.setState({message: event.target.value});
   }
 
   render() {
     return (
-      <footer className="chatbar" onSubmit={this.handleSubmit}>
-        <input className="chatbar-username" placeholder="Your Name (Optional)" value={this.props.name} onChange={this.handleChange}/>
-        <input className="chatbar-message" placeholder="Type a message and hit ENTER" onKeyDown={this.enterListener}/>
+      <footer className="chatbar">
+        <input
+          className="chatbar-username"
+          placeholder="Your Name (Optional)"
+          value={this.state.user}
+          onChange = {this.updateName}
+          onKeyDown = {this.submitName}
+        />
+        <input
+          className="chatbar-message"
+          placeholder="Type a message and hit ENTER"
+          value={this.state.message}
+          onChange = {this.updateMessage}
+          onKeyDown = {this.submitMessage}
+        />
       </footer>
     );
   }
 }
-export default Chatbar;
+export default ChatBar;

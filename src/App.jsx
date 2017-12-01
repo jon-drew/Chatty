@@ -1,54 +1,65 @@
 import React, {Component} from 'react';
-import ChatBar from "./ChatBar.jsx";
-import MessageList from "./MessageList.jsx";
+import ChatBar from './ChatBar.jsx'
+import MessageList from './MessageList.jsx'
+import Nav from './Nav.jsx'
 
 class App extends Component {
-  constructor(props) {
+  constructor(props){
     super(props);
     this.state = {
       currentUser: {name: "Bob"},
-      messages: []
-    }
-    this.socket = new WebSocket('ws://localhost:3001/');
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+      messages: [],
+      numberOfUsers: 1
+    };
+    this.socket = new WebSocket("ws://localhost:3001");
   }
 
-  componentDidMount() {
+  componentDidMount(){
     console.log("componentDidMount <App />");
     function connect() {
       this.socket.onopen = evt => {
         this.socket.send('Connected to server')
       }
     }
-  }
 
-  handleSubmit(event) {
-    this.socket.send(JSON.stringify(event));
-    this.setState({data: this.state});
-    this.socket.onmessage = (event) => {
-      console.log(event);
-    let newMessage = JSON.parse(messageFromServer.data);
-    this.state.messages.push(newMessage);
-    // code to handle incoming message
+    this.socket.onmessage = messageEvent => {
+      let newMessage = JSON.parse(messageEvent.data);
+      if (newMessage.content !== undefined){
+        this.setState(
+          {messages: this.state.messages.concat(newMessage)}
+        );
+      } else {
+        if (newMessage.counter)
+          this.setState({numberOfUsers: newMessage.counter});
+      }
     }
   }
 
-  handleChange(event) {
-    this.setState({value: event.target.value})
+  onName = (newUser) =>{
+    if(this.socket)
+      this.socket.send(JSON.stringify({username: newUser}));
+  }
+
+  onMessage = (content) =>{
+    if(this.socket)
+      this.socket.send(JSON.stringify({content}));
   }
 
   render() {
     return (
       <div>
-        <nav className="navbar">
-          <a href="/" className="navbar-brand">Chatty</a>
-        </nav>
-        <MessageList messages={this.state.messages}/>
-        <ChatBar name={this.state.currentUser.name} handleSubmit={this.handleSubmit}/>
+        <Nav
+          numberOfUsers={this.state.numberOfUsers}
+        />
+        <MessageList
+          MessageList={this.state.messages}
+        />
+        <ChatBar
+          onName={this.onName}
+          onMessage={this.onMessage}
+        />
       </div>
     );
   }
 }
-
 export default App;
