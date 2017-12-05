@@ -27,7 +27,7 @@ wss.on('connection', (ws) => {
   let username = "Anonymous";
 
   ws.on('message', function incoming(message) {
-    parsedMessage = JSON.parse(message);
+    let parsedMessage = JSON.parse(message);
     parsedMessage.id = uuid();
 
     if (parsedMessage.username === undefined) {

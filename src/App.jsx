@@ -26,9 +26,8 @@ class App extends Component {
       let incomingMessage = JSON.parse(messageEvent.data);
       if (incomingMessage.content !== undefined){
         this.setState({messages: this.state.messages.concat(incomingMessage)})
-      } else {
-        if (incomingMessage.counter)
-          this.setState({numberOfUsers: incomingMessage.counter});
+      } else if (incomingMessage.counter) {
+        this.setState({numberOfUsers: incomingMessage.counter});
       }
     }
   }

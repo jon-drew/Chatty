@@ -8,3 +8,5 @@ Dependencies:
 "express": "4.16.2",
 "ws": "3.3.2"
 "uuid": "^3.1.0",
+"react": "15.4.2",
+"react-dom": "15.4.2"
