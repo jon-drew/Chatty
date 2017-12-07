@@ -48,6 +48,6 @@ wss.on('connection', (ws) => {
 
   ws.on('close', () => {
     console.log('Client disconnected.');
-    wss.broadcast(wss.clients.size);
+    wss.broadcast(JSON.stringify({wss.clients.size}));
   });
 });
